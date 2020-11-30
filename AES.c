@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//2018112071 Àü¹®¼ö
+
 #define Nb 4
 #define Nk 4
 
@@ -27,10 +27,10 @@ void Inv_CirShiftRows(BYTE *row);
 WORD SubWord(WORD W);
 WORD RotWord(WORD W);
 BYTE x_time(BYTE n, BYTE b);
-int HtoI(BYTE *hex); //16Áø¼ö¸¦ 10Áø¼ö·Î º¯È¯ÇÏ´Â ÇÔ¼ö
+int HtoI(BYTE *hex); //16ì§„ìˆ˜ë¥¼ 10ì§„ìˆ˜ë¡œ ë³€í™˜í•˜ëŠ” í•¨ìˆ˜
 
-//Àü¿ªº¯¼ö
-//¾ÏÈ£È­ s-box
+//ì „ì—­ë³€ìˆ˜
+//ì•”í˜¸í™” s-box
 BYTE S_box[16][16] = {
 	99,124,119,123,242,107,111,197,48,1,103,43,254,215,171,118,
 	202,130,201,125,250,89,71,240,173,212,162,175,156,164,114,192,
@@ -50,7 +50,7 @@ BYTE S_box[16][16] = {
 	140,161,137,13,191,230,66,104,65,153,45,15,176,84,187,22,
 };
 
-//º¹È£È­ s-box
+//ë³µí˜¸í™” s-box
 BYTE Inv_S_box[16][16] = {
 	82,9,106,213,48,54,165,56,191,64,163,158,129,243,215,251,
 	124,227,57,130,155,47,255,135,52,142,67,68,196,222,233,203,
@@ -70,7 +70,7 @@ BYTE Inv_S_box[16][16] = {
 	23,43,4,126,186,119,214,38,225,105,20,99,85,33,12,125,
 };
 
-//Rcon »ó¼ö
+//Rcon ìƒìˆ˜
 static WORD Rcon[11] = { 0x01000000, 0x02000000, 0x04000000,
 						0x08000000, 0x10000000, 0x20000000,
 						0x40000000, 0x80000000, 0x1b000000,
@@ -90,26 +90,26 @@ void main() {
 	BYTE key_temp[128] = { 0, };
 	BYTE temp[2] = { 0,0 };
 
-	printf("Æò¹® ÀÔ·Â : ");
+	printf("í‰ë¬¸ ì…ë ¥ : ");
 	gets(p_temp);
 	msg_len = (int)strlen((char*)p_temp);
 	int num = 0;
 	for (i = 0; i < msg_len; i++) {
 		int k = i % 2;
 		switch (k) {
-		case 0: //i°¡ Â¦¼öÀÏ¶§
+		case 0: //iê°€ ì§ìˆ˜ì¼ë•Œ
 			temp[k] = p_temp[i];
 			break;
-		case 1: //i°¡ È¦¼öÀÏ¶§
+		case 1: //iê°€ í™€ìˆ˜ì¼ë•Œ
 			temp[k] = p_temp[i];
 			break;
 		}
-		if (k == 1) { //i°¡ È¦¼öÀÌ¸é 10Áø¼ö·Î º¯°æ
+		if (k == 1) { //iê°€ í™€ìˆ˜ì´ë©´ 10ì§„ìˆ˜ë¡œ ë³€ê²½
 			p_text[num] = HtoI(temp);
 			num++;
 		}
 	}
-	printf("ºñ¹Ğ Å° ÀÔ·Â : ");
+	printf("ë¹„ë°€ í‚¤ ì…ë ¥ : ");
 	gets(key_temp);
 	int key_len = (int)strlen((char*)key_temp);
 	num = 0;
@@ -135,7 +135,7 @@ void main() {
 	for (i = 0; i < block_count; i++) {
 		AES_Cipher(&p_text[i*Nb * 4], &c_text[i*Nb * 4], key);
 	}
-	printf("\n¾ÏÈ£¹® : ");
+	printf("\nì•”í˜¸ë¬¸ : ");
 	for (i = 0; i < block_count*Nb * 4; i++) {
 		printf("%02X", c_text[i]);
 	}
@@ -144,14 +144,14 @@ void main() {
 	for (i = 0; i < block_count; i++) {
 		AES_Inverse_Cipher(&c_text[i*Nb * 4], &inv_c_text[i*Nb * 4], key);
 	}
-	printf("\nº¹È£¹® : ");
+	printf("\në³µí˜¸ë¬¸ : ");
 	for (i = 0; i < msg_len; i++) {
 		printf("%02X", inv_c_text[i]);
 	}
 	printf("\n");
 }
 
-void SubBytes(BYTE state[][4]) {//subbytes ÇÁ·Î±×·¥
+void SubBytes(BYTE state[][4]) {//subbytes í”„ë¡œê·¸ë¨
 	int i, j;
 	for (i = 0; i < 4; i++) {
 		for (j = 0; j < 4; j++) {
@@ -160,7 +160,7 @@ void SubBytes(BYTE state[][4]) {//subbytes ÇÁ·Î±×·¥
 	}
 }
 
-void Inv_SubBytes(BYTE state[][4]) {//inverse subbytes ÇÁ·Î±×·¥
+void Inv_SubBytes(BYTE state[][4]) {//inverse subbytes í”„ë¡œê·¸ë¨
 	int i, j;
 	for (i = 0; i < 4; i++) {
 		for (j = 0; j < 4; j++) {
@@ -169,7 +169,7 @@ void Inv_SubBytes(BYTE state[][4]) {//inverse subbytes ÇÁ·Î±×·¥
 	}
 }
 
-void ShiftRows(BYTE state[][4]) {//shiftrows ÇÁ·Î±×·¥
+void ShiftRows(BYTE state[][4]) {//shiftrows í”„ë¡œê·¸ë¨
 	int i, j;
 	for (i = 1; i < 4; i++) {
 		for (j = 0; j < i; j++) {
@@ -187,7 +187,7 @@ void CirShiftRows(BYTE *row) {
 	row[3] = temp;
 }
 
-void Inv_ShiftRows(BYTE state[][4]) {//inverse shiftrows ÇÁ·Î±×·¥
+void Inv_ShiftRows(BYTE state[][4]) {//inverse shiftrows í”„ë¡œê·¸ë¨
 	int i, j;
 	for (i = 1; i < 4; i++) {
 		for (j = 0; j < i; j++) {
@@ -290,7 +290,7 @@ void KeyExpansion(BYTE *key, WORD *W) {
 	while (i < (Nb*(Nr + 1))) {
 		temp = W[i - 1];
 		if (i%Nk == 0)
-			temp = SubWord(RotWord(temp)) ^ Rcon[i / Nk - 1]; //¿©±â [temp]¾Æ´Ñ°¡?
+			temp = SubWord(RotWord(temp)) ^ Rcon[i / Nk - 1];
 		else if ((Nk > 6) && (i%Nk == 4))
 			temp = SubWord(temp);
 
@@ -338,7 +338,7 @@ void AES_Cipher(BYTE *in, BYTE *out, BYTE *key) {
 			state[j][i] = in[i * 4 + j];
 		}
 	}
-/*	//pre round Ãâ·Â
+/*	//pre round ì¶œë ¥
 	printf("<Pre-round>\n");
 	printf("state input :\n");
 	for (k = 0; k < 4; k++) {
@@ -366,7 +366,7 @@ void AES_Cipher(BYTE *in, BYTE *out, BYTE *key) {
 	}
 	printf("\n");
 */
-	//¶ó¿îµå °è»ê ¹× Ãâ·Â
+	//ë¼ìš´ë“œ ê³„ì‚° ë° ì¶œë ¥
 	for (i = 0; i < Nr - 1; i++) {
 /*
 		printf("<Round %d>\n", i + 1);
@@ -378,7 +378,7 @@ void AES_Cipher(BYTE *in, BYTE *out, BYTE *key) {
 			printf("\n");
 		}
 */
-/*		if (i == 6) { //round 7 Ãâ·Â
+/*		if (i == 6) { //round 7 ì¶œë ¥
 			printf("<Round %d>\n", i + 1);
 			printf("state input :\n");
 			for (k = 0; k < 4; k++) {
@@ -443,7 +443,7 @@ void AES_Cipher(BYTE *in, BYTE *out, BYTE *key) {
 		printf("\n");
 */
 	}
-/*	//¸¶Áö¸· ¶ó¿îµå Ãâ·Â
+/*	//ë§ˆì§€ë§‰ ë¼ìš´ë“œ ì¶œë ¥
 	printf("<Round %d>\n", Nr);
 	printf("state input :\n");
 	for (k = 0; k < 4; k++) {
@@ -502,7 +502,7 @@ void AES_Inverse_Cipher(BYTE *in, BYTE *out, BYTE *key) {
 			state[j][i] = in[i * 4 + j];
 		}
 	}
-//	//pre round Ãâ·Â
+//	//pre round ì¶œë ¥
 //	printf("<Pre-round>\n");
 //	printf("state input :\n");
 //	for (k = 0; k < 4; k++) {
@@ -528,7 +528,7 @@ void AES_Inverse_Cipher(BYTE *in, BYTE *out, BYTE *key) {
 //	}
 //	printf("\n");
 
-	//¶ó¿îµå °è»ê ¹× Ãâ·Â
+	//ë¼ìš´ë“œ ê³„ì‚° ë° ì¶œë ¥
 	for (i = 0; i < Nr - 1; i++) {
 //		printf("<Round %d>\n", i + 1);
 //		printf("state input :\n");
@@ -557,7 +557,7 @@ void AES_Inverse_Cipher(BYTE *in, BYTE *out, BYTE *key) {
 //		}
 //		printf("\n");
 	}
-//	//¸¶Áö¸· ¶ó¿îµå Ãâ·Â
+//	//ë§ˆì§€ë§‰ ë¼ìš´ë“œ ì¶œë ¥
 //	printf("<Round %d>\n", Nr);
 //	printf("state input :\n");
 //	for (k = 0; k < 4; k++) {
@@ -595,11 +595,11 @@ int HtoI(BYTE *hex) {
 	int result, temp0, temp1;
 
 	result = 0;
-	//char¸¦ int·Î º¯È¯, ASCIIÄÚµå »ç¿ë
+	//charë¥¼ intë¡œ ë³€í™˜, ASCIIì½”ë“œ ì‚¬ìš©
 	temp0 = (int)hex[0];
 	temp1 = (int)hex[1];
 
-	//temp0, 16^1ÀÚ¸® °è»ê
+	//temp0, 16^1ìë¦¬ ê³„ì‚°
 	if (temp0 >= 48 && temp0 <= 57) {
 		result += (temp0 - 48) * 16;
 	}
@@ -610,7 +610,7 @@ int HtoI(BYTE *hex) {
 		result += (temp0 - (97 - 10)) * 16;
 	}
 
-	//temp1, 16^0ÀÚ¸® °è»ê
+	//temp1, 16^0ìë¦¬ ê³„ì‚°
 	if (temp1 >= 48 && temp1 <= 57) {
 		result += temp1 - 48;
 	}
